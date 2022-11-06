@@ -11,8 +11,11 @@ exports.register= catchAsync( async (req,res,next) =>{
 
     const user= await User.create(req.body);
 
-    sendToken(user,201,res)
-
+    //sendToken(user,201,res)
+    res.status(201).json({
+        success:true,
+        message:"proceed to login with email and password"
+    })
  });
 
 exports.login= catchAsync( async (req,res,next) =>{
@@ -50,7 +53,7 @@ exports.forgotPassword = catchAsync( async (req,res,next) =>{
     const user = await  User.findOne({email});
 
     
-    if(!user) return next( new errorHandler("No user found",404));
+    if(!user) return next( new errorHandler("No user found with that email",404));
 
     const resetTkn = user.generateResetToken();
 
@@ -169,15 +172,14 @@ exports.changePassword = catchAsync( async (req,res,next) =>{
 })
 
 
+//! Can only update username and picture not password,email or role
 exports.updateUserProfile = catchAsync( async (req,res,next) =>{
 
     if(req.body.password || req.body.passwordConfirm) return next( new errorHandler("Cannot update Password",400));
 
-    // const {name,email} = req.body;
+    const {username}= req.body;
 
-    // get user from db and update
-
-    const user = await User.findByIdAndUpdate(req.user.id,req.body,{new:true, runValidators:true});
+    const user = await User.findByIdAndUpdate(req.user.id,{username},{new:true, runValidators:true});
 
 
     res.status(200).json({
@@ -185,3 +187,61 @@ exports.updateUserProfile = catchAsync( async (req,res,next) =>{
         user
     });
 });
+
+exports.updateUserEmail = catchAsync( async (req,res,next) =>{
+
+    if(req.body.password || req.body.passwordConfirm) return next( new errorHandler("Cannot update Password",400));
+
+    
+    let {email} = req.user;
+
+    const user = await User.findOne({email});
+
+    if(!user) next(new errorHandler("No user with that email was found",404));
+
+    //generate token and store in db
+    const token = await user.generateResetToken();
+
+    await user.save({validateBeforeSave:false});
+
+    res.status(200).json({
+        success:true,
+        message:"a mail was sent to your current mailbox.look up to continue with changing your email",
+        token
+
+    });
+});
+
+//changes mail from the url from user
+exports.updateEmail = catchAsync( async (req,res,next) =>{
+    //console.log(req.query);
+    
+    let {token} = req.query;
+
+    //has token from user
+    token = crypto.createHash('sha256').update(token).digest('hex');
+
+    //verify its authenticty
+    const user = await User.findOne({token})
+
+    if(!user)
+        return next(new errorHandler("Invalid or expired token",401));
+    
+    user.email = req.body.email;
+
+    //remove temporary fields
+    user.resetPasswordToken = undefined;
+    user.resetPasswordExpiry = undefined;
+
+    //save user
+    await user.save({validateBeforeSave:false});
+
+    //logout user for loggin again with new email
+    res.status(200).cookie('token',null,{
+        expires: new Date(Date.now()),
+        httpOnly:true
+    }).json({
+        success:true,
+        message:`email changed to ${req.body.email}`
+    });
+})
