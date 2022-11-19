@@ -6,7 +6,7 @@
       alt="nodejs"
 />
 <hr>
-<h3>## To clone m work into your local machine</h3>
+<h3>## To clone my work into your local machine</h3>
 <div>
       :fire: mkdir project<br>
       :fire: cd project<br>
@@ -20,4 +20,4 @@
     <li>npm run start:dev:for dev mode</li>
     <li>npm run start/npm start:prod for production mode</li>
  </ul>
-## Thamk You😍😍
+## Thank You😍😍
