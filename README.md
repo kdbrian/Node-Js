@@ -17,7 +17,7 @@
 </div>
 <ul>
     <li>npm install</li>
-    <li>npm run start:dev:for dev mode<li>
-    <li>npm run start/npm start:prod for production mode<li>
+    <li>npm run start:dev:for dev mode</li>
+    <li>npm run start/npm start:prod for production mode</li>
  </ul>
 ## Thamk You😍😍
