@@ -3,7 +3,6 @@ const catchAsync = require('../middlewares/catchAsync');
 const ErrorHandler = require('../utils/errorHandler');
 const { ObjectID } = require('bson');
 
-
 exports.createUser = catchAsync( async (req,res,next) =>{
 
     const user = await User.create(req.body);
