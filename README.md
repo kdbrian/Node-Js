@@ -5,20 +5,3 @@
       title="credit:technoFAQ"
       alt="nodejs"
 />
-<hr>
-<h3>## To clone my work into your local machine</h3>
-<div>
-      :fire: mkdir project<br>
-      :fire: cd project<br>
-      :fire: git init<br>
-      :fire: git remote add origin <code>https://github.com/La-mello/Node-Js.git</code><br>
-      :fire: git pull origin master<br>
-      :fire: open any forlder<br>
-</div>
-<ul>
-    <li>npm install</li>
-    <li>npm run start:dev:for dev mode</li>
-    <li>npm run start/npm start:prod for production mode</li>
- </ul>
-## Thank You😍😍
-<!-- nocommit-->
