@@ -9,7 +9,7 @@ const app  = express();
 app.get('/', (req,res)=>{
 
     res.send("You have reached the home of this server")
-})
+});
 
 app.listen(PORT, ()=>{
 
